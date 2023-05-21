@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finca San Pedro, Pensilvania Caldas</title>
+
+  <!-- Paquete del mapa -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+
+  <!-- Cargar gestor de la base de datos antes de la carga del body -->
+  <script type="module" src="./scripts/adminDB.js"></script>
+
+  <!-- Estilos de la interfaz -->
+  <link rel="stylesheet" href="./estilos/mapa.css" />
+
+  <!-- Icono para la pestaña solicitado por el navegador y para acompañar la interfaz -->
+  <link rel="shortcut icon" href="./assets/mapColombia.png" type="image/x-icon">
+
+
+</head>
+
+<body>
+  <h1> HERRAMIENTA PARA LA TOMA DE DECISIONES - SAN PEDRO<h1>
+    </h1>
+    <h2>Por favor seleccione el lote que quiere consultar</h2>
+    <div>
+    </div>
+    <div>
+      <button id="btn-cancelar-nuevos-puntos"> Cancelar </button>
+      <button id="btn-guardar-nuevos-puntos" type="submit"> Guardar Nuevos Puntos</button>
+
+    </div>
+
+
+    <div id="map" style="height: 787px;">
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <script>
+      //Instanciar el mapa
+      var map = L.map('map').setView([5.349122267, -75.114], 22);
+
+      mapLink =
+        '<a href="http://www.esri.com/">Esri</a>';
+      wholink =
+        'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+      L.tileLayer(
+        'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; ' + mapLink + ', ' + wholink,
+        maxZoom: 18,
+      }).addTo(map)
+    </script>
+    <script type="module" src="./scripts/map.js"></script>
+
+
+
+</body>
+
+</html>

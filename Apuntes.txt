@@ -1,0 +1,8 @@
+- Pasos procesamiento de archivo JSON con Vanilla JS (carga):
+https://gomakethings.com/how-to-upload-and-process-a-json-file-with-vanilla-js/
+
+- Ejemplo para procesar con promesas:
+https://stackoverflow.com/questions/63565509/vanilla-javascript-how-to-read-local-json-file
+
+- Plantilla firebase con vanilla JS
+https://github.com/kpDemos/simpleDatabase/blob/main/simpleDatabase.html

@@ -1,0 +1,30 @@
+[{"title":"LOTE 1","lat":5.34813267,"len":-75.1144,
+  "reg":[
+          [ {"valor":"10/05/2023","clase":""},
+            {"valor":"rtyrty","clase":""},
+            {"valor":"","clase":""},
+            {"valor":"yrtyrtyrty","clase":""} ],
+          [ {"valor":"","clase":""},
+            {"valor":"Escriba el motivo de aplicación","clase":""},
+            {"valor":"","clase":""},
+            {"valor":"Escriba los comentarios asociados al evento","clase":""} ],
+          [ {"valor":"09/05/2023","clase":""},
+            {"valor":"Algo de motivo\n","clase":""},
+            {"valor":"drench","clase":""},
+            {"valor":"Describiendo","clase":""} ],
+          [ {"valor":"","clase":""},
+            {"valor":"Escriba el motivo de aplicación","clase":""},
+            {"valor":"","clase":""},{"valor":"Escriba los comentarios asociados al evento","clase":""} ]
+        ]
+
+}, 
+{"title":"LOTE 2","lat":5.3476,"len":-75.115434, 
+    "reg":[
+            [ {"valor":"10/05/2023","clase":""},
+              {"valor":"SegColumnaLote2","clase":""},
+              {"valor":"TercColumnaLote2","clase":""},
+              {"valor":"CuartaColumnaLote2","clase":""} ]
+  ] }, 
+{"title":"LOTE 3","lat":5.3491322267,"len":-75.1154, 
+"reg":[]}
+]

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title id="tituloWeb">LOTE </title>
+  <link rel="stylesheet" href="./estilos/pantallaGestion.css" />
+  <!-- Icono para la pestaña solicitado por el navegador y para acompañar la interfaz -->
+  <link rel="shortcut icon" href="./assets/registros.png" type="image/x-icon">
+
+  <!-- Cargar gestor de la base de datos antes de la carga del body -->
+  <script type="module" src="./scripts/updateRegistersLocationDB.js"></script>
+
+</head>
+
+<body>
+  <h1 id="tituloLote">LOTE </h1>
+  <h2>Última información cargada:</h2>
+  <table style="margin: 0 auto;" id="informacion">
+    <thead>
+      <tr>
+        <th> Cantidad de árboles </th>
+        <th> Edad promedio </th>
+        <th> Tipo de aguacate sembrado </th>
+        <th> Dimensiones de siembra </th>
+        <th> Persona encargada del lote </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id="cell-cantidad-arboles" contenteditable="true">##</td>
+        <td id="cell-edad-promedio" contenteditable="true"> 3.5 años</td>
+        <td id="cell-tipo-aguacate">Hass</td>
+        <td id="dimensiones-siembre">7 x 7 m</td>
+        <td id="encargado-lote" contenteditable="true"> Alfonso Cardona</td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div>
+    <table id="datos" style="margin: 0 auto; margin-top:30px">
+      <thead>
+        <tr>
+          <th> Fecha </th>
+          <th> Motivo de aplicación </th>
+          <th> Tipo de aplicación </th>
+          <th> Descripción </th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input type="text" class="flatpickr" placeholder="Selecciona una fecha">
+          </td>
+          <td contenteditable="true"></td>
+          <td style="max-width: 10px"> <select>
+              <option value=''>Seleccione una opción</option>
+              <option value="foliar">Foliar</option>
+              <option value="drench">Drench</option>
+            </select></td>
+          <td contenteditable="true"></td>
+        </tr>
+
+      </tbody>
+    </table>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+    <div style="margin-top: 10px;">
+      <button onclick="agregarFila()" style="position: relative;">Agregar fila</button>
+      <button onclick="eliminarUltimaFila()" style="position: relative;">Eliminar fila</button>
+      <button onclick="exportar()">Exportar</button>
+    </div>
+
+    <script>
+
+      //Primera acción -> obtener el id del loteGET
+
+
+      //Esta función agrega las nuevas filas a través de los botones
+      function agregarFila() {
+        var tabla = document.getElementById("datos");
+        var fila = tabla.insertRow();
+        var celda1 = fila.insertCell(0);
+        var celda2 = fila.insertCell(1);
+        var celda3 = fila.insertCell(2);
+        var celda4 = fila.insertCell(3);
+
+        // Añadir el datepicker al campo de fecha
+        celda1.innerHTML = "<td contenteditable='true' class='fecha-esperada'><input type='text' class='datepicker' style='font-size: 1em; border: none; fill: none; text-align: center;'></td>";
+        var picker = flatpickr(celda1.querySelector(".datepicker"), {
+          locale: "es",
+          dateFormat: "d/m/Y"
+        });
+
+        celda2.innerHTML = "<div contenteditable='true' style= 'font-size: 0.85em;'>Escriba el motivo de aplicación</div>";
+        celda3.innerHTML = "<select><option value=''>Seleccione una opción</option><option value='opcion1'>Foliar</option><option value='opcion2'>Drench</option></select>";
+        celda4.innerHTML = "<div contenteditable='true' style= 'font-size: 0.85em;'>Escriba los comentarios asociados al evento</div>";
+      }
+
+      //Función que elimina la última fila 
+      function eliminarUltimaFila() {
+        if (!confirm("¿Estás seguro de que deseas eliminar una fila? Esta acción no se puede deshacer")) {
+          return;
+        }
+        var table = document.getElementById("datos");
+        var numRows = table.rows.length;
+        if (numRows > 1) {
+          table.deleteRow(numRows - 1);
+        }
+      }
+    </script>
+
+    <script>
+      // Función para exportar los datos de la tabla "DATOS" en formato CSV
+      function exportarCSV() {
+        // Obtenemos los datos de la tabla
+        var tabla = document.getElementById("datos");
+        var filas = tabla.rows;
+        var csv = [];
+
+        // Recorremos las filas de la tabla
+        for (var i = 0; i < filas.length; i++) {
+          var fila = [];
+          var celdas = filas[i].cells;
+
+          // Recorremos las celdas de la fila
+          for (var j = 0; j < celdas.length; j++) {
+            var valor;
+            if (celdas[j].querySelector("input[type='text']")) {
+              valor = celdas[j].querySelector("input[type='text']").value;
+            } else if (celdas[j].querySelector("select")) {
+              valor = celdas[j].querySelector("select").value;
+            } else {
+              valor = celdas[j].innerText;
+            }
+            fila.push(valor);
+          }
+
+          // Agregamos la fila al array de CSV
+          csv.push(fila.join(","));
+        }
+
+        // Generamos el archivo CSV y lo descargamos
+        var enlace = document.createElement("a");
+        enlace.setAttribute(
+          "href",
+          "data:text/csv;charset=utf-8," + encodeURIComponent(csv.join("\n"))
+        );
+        enlace.setAttribute("download", "datos.csv");
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+      }
+
+      // Creo función homónima para exportar a CSV los datos de INFORMACION
+      function exportarCSV2() {
+        /// Obtenemos los datos de la tabla
+        var tabla = document.getElementById("informacion");
+        var filas = tabla.rows;
+        var csv = [];
+
+        // Recorremos las filas de la tabla
+        for (var i = 0; i < filas.length; i++) {
+          var fila = [];
+          var celdas = filas[i].cells;
+
+          // Recorremos las celdas de la fila
+          for (var j = 0; j < celdas.length; j++) {
+            var valor;
+            if (celdas[j].querySelector("input[type='text']")) {
+              valor = celdas[j].querySelector("input[type='text']").value;
+            } else if (celdas[j].querySelector("select")) {
+              valor = celdas[j].querySelector("select").value;
+            } else {
+              valor = celdas[j].innerText;
+            }
+            fila.push(valor);
+          }
+
+          // Agregamos la fila al array de CSV
+          csv.push(fila.join(","));
+        }
+
+        // Generamos el archivo CSV y lo descargamos
+        var enlace = document.createElement("a");
+        enlace.setAttribute(
+          "href",
+          "data:text/csv;charset=utf-8," + encodeURIComponent(csv.join("\n"))
+        );
+        enlace.setAttribute("download", "informacion.csv");
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+      }
+
+      // Función que exporta los datos
+      function exportar() {
+        var opcion = window.prompt("¿Qué quieres exportar?\n\n1. Información del Lote\n2. Registros históricos\n3. Ambos");
+
+        if (opcion == "1") {
+          exportarCSV2();
+        } else if (opcion == "2") {
+          exportarCSV();
+        } else if (opcion == "3") {
+          exportarCSV();
+          exportarCSV2();
+        } else if (opcion !== null) {
+          alert("Opción inválida");
+        }
+      }			  			  
+    </script>
+    <canvas id="myChart" style="position:relative"></canvas>
+
+  </div>
+
+  <!--
+	
+  <h3 style="text-align:left;  margin-left: 30px; margin-bottom:-25px;color:#025847;">CÁLCULO PROGRESO</h3>
+	<table style="position: relative; margin-top:40px">
+		<thead>
+		  <tr>
+			<th>Fecha actual</th>
+			<th>Fecha estimada de cosecha</th>
+			<th> Click para calcular</th>
+			<th> Faltan</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td>
+				<input type="text" class="flatpickr" id="hoy" placeholder="Selecciona una fecha">
+			</td>
+			<td>
+				<input type="text" class="flatpickr" id="mañana" placeholder="Selecciona una fecha">
+			</td>
+			<td><button onclick="calcularDiferencia()" style="margin-left:10px; margin-top:20px; position: relative; background-color: #009879;">Calcular</button></td>
+			<td id="resultado" style="font-size: 0.9em;"></td>
+		</tr>
+		</tbody>
+	  </table>
+
+   -->
+
+  <div style="position: relative; bottom: 0; width: 100%">
+    <button onclick="goToIndex()">Volver al mapa</button>
+    <button id="btn-guardar" type="button"> Guardar cambios </button>
+  </div>
+
+  <script>
+    // Función que manda al mapa nuevamente
+    function goToIndex() {
+      window.location.href = "index.html";
+    }
+  </script>
+
+
+
+  <script type="module">
+
+
+    import * as updateRegisters from "./scripts/updateRegistersLocationDB.js";
+
+    flatpickr(".flatpickr", {
+      dateFormat: "d/m/Y",
+      locale: "es",
+    });
+
+    /*
+    //Función que calcula el % de días faltantes y modifica la gráfica
+    let myChart = null; // referencia global al objeto Chart
+    
+    function calcularDiferencia() {
+      var fecha1 = flatpickr.parseDate(document.getElementById("hoy").value, "d/m/Y");
+      var fecha2 = flatpickr.parseDate(document.getElementById("mañana").value, "d/m/Y");
+      var diferencia = fecha2.getTime() - fecha1.getTime();
+      var dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+      document.getElementById("resultado").innerHTML = "Faltan " + dias + " días para la cosecha.";
+    }*/
+
+    //Referencia al botón
+    const btnGuardarDatos = document.getElementById("btn-guardar")
+    btnGuardarDatos.addEventListener("click", (e) => {
+
+      //Guardar los datos
+      guardarDatos()
+
+      //Bloquear encabezado
+      bloquearCamposTablaPrincipal();
+
+
+
+    })
+
+    //Bloquear campos tabla principal
+    function bloquearCamposTablaPrincipal() {
+      document.getElementById("cell-cantidad-arboles").contentEditable = false;
+      document.getElementById("cell-edad-promedio").contentEditable = false;
+      document.getElementById("cell-tipo-aguacate").contentEditable = false;
+      document.getElementById("dimensiones-siembre").contentEditable = false;
+      document.getElementById("encargado-lote").contentEditable = false;
+    }
+
+
+
+    // Funcion que permite guardar los datos mostrados de la tabla datos
+    function guardarDatos() {
+      if (!confirm("¿Estás seguro de que deseas guardar los datos? Esta acción no se puede deshacer")) {
+        return;
+      }
+      var tabla = document.getElementById("datos");
+      var filas = tabla.rows;
+      var datos = [];
+
+      // Recorremos las filas de la tabla
+      for (var i = 0; i < filas.length; i++) {
+        var fila = [];
+        var celdas = filas[i].cells;
+
+        // Recorremos las celdas de la fila
+        for (var j = 0; j < celdas.length; j++) {
+          var valor, clase;
+          if (celdas[j].querySelector("input[type='text']")) {
+            valor = celdas[j].querySelector("input[type='text']").value;
+          } else if (celdas[j].querySelector("select")) {
+            valor = celdas[j].querySelector("select").value;
+          } else {
+            valor = celdas[j].innerText;
+          }
+          clase = celdas[j].className;
+          fila.push({valor: valor, clase: clase});
+        }
+
+        // Agregamos la fila al array de datos si no es una fila de títulos
+        if (i != 0) {
+          datos.push(fila);
+        }
+      }
+
+      // Guardamos los datos en localStorage (GUARDARLO EN UN ARCHIVO JSON)
+      //localStorage.setItem("datos", JSON.stringify(datos)); // IMPRIMIR EN UN CONSOL.LOG
+
+      //Obtener el id del lote de las variables GET
+      window.$_GET = new URLSearchParams(location.search);
+      var idLote = parseInt($_GET.get('idLote'));
+
+      //Cargar base de datos de puntos en JSON para modificar
+      let jsonPuntos = JSON.parse(localStorage.getItem("puntos"));
+      jsonPuntos[idLote].reg = datos //Actualiza los registros del lote
+
+      //Actualizar la base de datos
+      localStorage.setItem("puntos", JSON.stringify(jsonPuntos))
+
+      //Guardar datos (actualizar) en Firebase     
+      updateRegisters.UpdateData(jsonPuntos[idLote], idLote)
+
+
+    }
+    // FETCH - API - JSON (AUTENTICACIÓN!!)
+
+    function cargarDatos() {
+
+      //Obtener de las variables GET del HTTP que comunica index (mapa principal) con registros (interfaz de administración) el id del lote que se va a gestionar
+      window.$_GET = new URLSearchParams(location.search);
+      var idLote = parseInt($_GET.get('idLote'));
+
+      //Cargar el número para el título
+      const titulo = document.getElementById("tituloLote")
+      titulo.innerText += " " + (idLote + 1)
+
+      //Cargar el número para el título del doc
+      const tituloW = document.getElementById("tituloWeb")
+      tituloW.innerText += " " + (idLote + 1)
+
+
+      const tabla = document.getElementById("datos");
+      var datos = JSON.parse(localStorage.getItem("puntos")); // IMPRIMIR EN UN CONSOL.LOG
+
+      //Validar que tengamos puntos en el localstorage y que haya registros, diferentes al caracter que indica que no hay registros (Firebase no permite parejas llave valor vacías como reg: [])
+      if (datos && datos[idLote].reg != "_") {
+
+        // Recorremos los datos y agregamos las filas a la tabla
+        for (let i = datos[idLote].reg.length - 1; i >= 0; i--) {
+          let fila = tabla.insertRow(1); // Insertamos las filas al principio de la tabla
+          for (let j = 0; j < datos[idLote].reg[i].length; j++) {
+            let celda = fila.insertCell();
+            celda.innerText = datos[idLote].reg[i][j].valor;
+            celda.className = datos[idLote].reg[i][j].clase;
+          }
+        }
+
+      }//Validación de acceso al local storage
+
+
+      bloquearCamposTablaPrincipal()
+
+
+    }//Finalización de carga de datos
+
+
+
+
+    cargarDatos();
+
+  </script>
+</body>
+
+</html>
